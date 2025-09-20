@@ -253,10 +253,14 @@ async def unzip_music(file_path):
     import zipfile
     import os
     filename = os.path.basename(file_path)
+    filename = os.path.splitext(filename)[0]
+    extract_path = os.path.join("temp", filename)
     with zipfile.ZipFile(file_path, 'r') as zip_ref:
         if not os.path.exists("temp"):
             os.makedirs("temp")
-        zip_ref.extractall(f"temp/{filename}")
+        print(os.path.abspath(f"temp/{filename}"))
+        print(os.path.isdir(os.path.abspath(f"temp/{filename}")))
+        zip_ref.extractall(extract_path)
 
     # found maidata.txt and so on
     music_dir = f"temp/{filename}"
