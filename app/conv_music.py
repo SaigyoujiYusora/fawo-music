@@ -101,12 +101,14 @@ async def aio_package(method: str, url: str, data: Optional[Union[bytes, str, Di
 
 
 async def import_music(music_file):
+    flag = False
     music_path = await unzip_music(music_file)
     try:
         pre_check = await import_check(music_path)
         if not pre_check["accept"]:
+            flag = False
             logger.info("Bad")
-            return
+            return flag
         logger.info("Good")
 
         music_id = await get_music_id()
@@ -119,12 +121,17 @@ async def import_music(music_file):
         await import_acb(music_path, music_id)
         await import_pv(music_path, music_id)
         await import_jacket(music_path, music_id)
+        flag = True
     except:
         logger.exception("导入音乐失败")
+        flag = False
+
 
 
 
     await clean_music(music_path)
+
+    return flag
 
 async def import_jacket(file_path, music_id, asset_dir="A403"):
     url = f"https://127.0.0.1:5001/MaiChartManagerServlet/SetMusicJacketApi/{asset_dir}/{music_id}"
