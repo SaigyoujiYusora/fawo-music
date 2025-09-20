@@ -1,2 +1,4 @@
 aiohttp
 loguru
+fastapi
+pydantic
